@@ -14,12 +14,14 @@
             <div class="col-md-8">
               <div class="card-body">
                 <h5 class="card-title">{{ profile.user.username }}</h5>
-                <p class="card-text">Link: @{{ profile.user.username|lower }}</p>
+                <p class="card-text"><a href="{% url 'm:profile' profile.user.id %}" style="text-decoration: none; color: inherit;">@{{ profile.user.username|lower }}</a></p>
                 <p class="card-text"><small class="text-muted">Last updated {{ profile.date_modified }}</small></p>
               </div>
             </div>
         </div>
       </div>
     {% endfor %}
+  {% else %}
+    <h2>No profiles found.</h2>
   {% endif %}
 {% endblock content %}
