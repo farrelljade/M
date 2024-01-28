@@ -16,6 +16,18 @@
                 <h5 class="card-title">{{ profile.user.username }}</h5>
                 <p class="card-text"><a href="{% url 'm:profile' profile.user.id %}" style="text-decoration: none; color: inherit;">@{{ profile.user.username|lower }}</a></p>
                 <p class="card-text"><small class="text-muted">Last updated {{ profile.date_modified }}</small></p>
+                
+                <form method=POST>
+                  {% csrf_token %}
+                  {% if profile in user.profile.follows.all %}
+                    <button class="btn btn-outline-danger" name="follow" value="unfollow"
+                    type="submit">Unfollow @{{ profile.user.username }}</button>
+                  {% else %}
+                    <button class="btn btn-outline-primary" name="follow" value="follow"
+                    type="submit">Follow @{{ profile.user.username }}</button>
+                  {% endif %}
+                </form>
+
               </div>
             </div>
         </div>
