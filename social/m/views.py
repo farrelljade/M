@@ -1,11 +1,37 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import Profile, Tweet
+from .forms import TweetForm
 
 def home(request):
+    tweet = None  # Initialize tweet
     if request.user.is_authenticated:
-        tweets = Tweet.objects.all().order_by("-created_at")  # get tweets from latest to oldest with "-created_at".
-    return render(request, "m/home.html", {'tweets': tweets})
+        form = TweetForm(request.POST or None)
+        if request.method == 'POST':
+            if form.is_valid():
+                tweet = form.save(commit=False)
+                tweet.user = request.user
+                tweet.save()
+                messages.success(request, "Your tweet has been successfully posted...")
+                return redirect('m:home')
+
+        context = {
+            'form': form,
+            'tweet': tweet  # Include tweet only if it's defined
+        }
+
+        tweets = Tweet.objects.all().order_by("-created_at")
+        context['tweets'] = tweets  # Add tweets to the context
+        return render(request, "m/home.html", context)
+
+    else:
+        tweets = Tweet.objects.all().order_by("-created_at")
+        context = {
+            'tweets': tweets  # Add tweets to the context
+        }
+        return render(request, "m/home.html", context)
+
 
 
 def profile_list(request):
@@ -46,3 +72,21 @@ def profile(request, pk):
     else:
         messages.error(request, "You must be logged in to view this page...")
         return redirect('m:home')
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Logged in successfully...")
+            return redirect('m:home')
+        else:
+            messages.error(request, "Incorrect login details. Please try again.")
+            context = {}
+            return render(request, 'm/home.html', context)
+
+def user_logout(request):
+    pass

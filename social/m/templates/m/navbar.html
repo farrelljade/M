@@ -11,9 +11,44 @@
           </li>
 
           {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'm:profile' request.user.id %}">{{ user }}</a>
-          </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'm:profile' request.user.id %}">{{ user }}</a>
+            </li>
+          {% else %}
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</a>
+              </li>                   
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header text-center">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="col-md-6 offset-md-3">
+                          <form method="POST" action="{% url 'm:login' %}">
+                              {% csrf_token %}
+                              <div class="mb-3">
+                                <input type="text" class="form-control" name="username" placeholder="Username" required>
+                              </div>
+                              <br/>
+                              <div class="mb-3">
+                                <input type="password" class="form-control" name="password" placeholder="Password" required>
+                              </div>
+                              <br/>
+                              <div class="modal-footer justify-content-center">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                              </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>               
+            </ul>
           {% endif %}
         </ul>
         <form class="d-flex">
@@ -22,4 +57,22 @@
         </form>
       </div>
     </div>
+
+      <!-- Script to redirect user to login Modal if incorrect login details -->
+      {% if messages %}
+      <script type="text/javascript">
+          $(document).ready(function() {
+              var showErrorModal = false;
+              {% for message in messages %}
+              if ("{{ message.tags }}" === "error") {
+                  showErrorModal = true;
+              }
+              {% endfor %}
+              if (showErrorModal) {
+                  $('#exampleModal').modal('show');  // Modal ID
+              }
+          });
+      </script>
+      {% endif %}
+
   </nav>

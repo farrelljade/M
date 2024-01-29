@@ -10,13 +10,14 @@
           {% if tweets %}
             {% for tweet in tweets %}
             <div class="alert alert-primary" role="alert">
-            {{ tweet }}
+              {{ tweet.body }}
             </div>
             {% endfor %}
           {% endif %}
         </div>
 
         <div class="col-4">
+          <br/><br/>
             <div class="card">
               <h5 class="card-header">Follows</h5>
                 <div class="card-body">

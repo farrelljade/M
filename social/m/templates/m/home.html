@@ -1,12 +1,28 @@
 {% extends 'm/base.html' %}
 
 {% block content %}
-  <h2>Welcome to M</h2>
 
-  {% for tweet in tweets %}
-  <div class="alert alert-primary" role="alert">
-    {{ tweet }}
+<div class="container text-center">
+  <div class="row">
+    <div class="col-8">
+      <h2>Welcome to M</h2>
+      {% for tweet in tweets %}
+      <div class="alert alert-primary" role="alert">
+        {{ tweet }}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="col-4">
+      <br/><br/>
+      {% if form %}
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Tweet</button>
+      </form>
+      {% endif %}
+    </div>
   </div>
-  {% endfor %}
-
+</div>
 {% endblock %}
