@@ -8,7 +8,9 @@
       <h2>Welcome to M</h2>
       {% for tweet in tweets %}
       <div class="alert alert-primary" role="alert">
-        {{ tweet }}
+        ({{ tweet.created_at }})
+        <strong>{{ tweet.user }}</strong><br/>
+        {{ tweet.body }}
       </div>
       {% endfor %}
     </div>
