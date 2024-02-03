@@ -1,7 +1,15 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Tweet
+from .models import Tweet, Profile
+
+# Profiles extras form
+class ProfilePicForm(forms.ModelForm):
+    profile_image = forms.ImageField(label="Profile Picture")
+
+    class Meta:
+        model = Profile
+        fields = ('profile_image', )
 
 class TweetForm(forms.ModelForm):
     """Create a tweet body form."""

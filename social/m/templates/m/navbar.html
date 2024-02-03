@@ -39,7 +39,9 @@
                       <div class="col-md-6 offset-md-3">
                         <form method="POST" action="{% url 'm:register' %}">
                             {% csrf_token %}
+
                             {{ form.as_p }}
+
                             <div class="modal-footer justify-content-center">
                               <button type="submit" class="btn btn-primary">Register</button>
                             </div>
@@ -94,39 +96,5 @@
         </form>
       </div>
     </div>
-
-    <!-- Script to redirect user to Registration Modal if incorrect login details -->
-    {% if messages %}
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var showRegisterModal = false;
-            {% for message in messages %}
-            if ("{{ message.tags }}" === "warning") {
-                showRegisterModal = true;
-            }
-            {% endfor %}
-            if (showRegisterModal) {
-                $('#registerModal').modal('show');  // Modal ID
-            }
-        });
-    </script>
-    {% endif %}
-
-      <!-- Script to redirect user to login Modal if incorrect login details -->
-      {% if messages %}
-      <script type="text/javascript">
-          $(document).ready(function() {
-              var showLoginModal = false;
-              {% for message in messages %}
-              if ("{{ message.tags }}" === "error") {
-                  showLoginModal = true;
-              }
-              {% endfor %}
-              if (showLoginModal) {
-                  $('#loginModal').modal('show');  // Modal ID
-              }
-          });
-      </script>
-      {% endif %}
 
   </nav>

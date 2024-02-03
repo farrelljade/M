@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Profile, Tweet
-from .forms import TweetForm, SignUpForm
+from .forms import TweetForm, SignUpForm, ProfilePicForm
 
 def home(request):
     tweet = None  # Initialize tweet
@@ -112,4 +113,30 @@ def user_register(request):
         else:
             messages.warning(request, "Registration failed. Please try again...")
 
-    return render(request, 'm/home.html', {'form': form})
+            return render(request, 'm/home.html', {'form': form})
+        
+
+def update_user(request):
+    """User profile update page."""
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        profile_user = Profile.objects.get(user_id=request.user.id)
+
+        # Get forms.
+        user_form = SignUpForm(request.POST or None, request.FILES or None, instance=current_user)
+        profile_form = ProfilePicForm(request.POST or None, request.FILES or None, instance=profile_user)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            login(request, current_user)
+            messages.success(request, "Your profile has been updated...")
+            return redirect('m:home')
+        
+        context = {
+            'user_form': user_form,
+            'profile_form': profile_form,
+        }
+        return render(request, 'm/update_user.html', context)
+    else:
+        messages.error(request, "You must be logged in to view this page!")
+        return redirect('m:home')
