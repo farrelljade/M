@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -139,4 +139,19 @@ def update_user(request):
         return render(request, 'm/update_user.html', context)
     else:
         messages.error(request, "You must be logged in to view this page!")
+        return redirect('m:home')
+
+def tweet_like(request, pk):
+    """Tweet like/unlike."""
+    if request.user.is_authenticated:
+        tweet = get_object_or_404(Tweet, id=pk)
+        if tweet.likes.filter(id=request.user.id).exists():
+            tweet.likes.remove(request.user)
+        else:
+            tweet.likes.add(request.user)
+
+        return redirect('m:home')
+
+    else:
+        messages.error(request, "You must be logged in to view this page...")
         return redirect('m:home')
