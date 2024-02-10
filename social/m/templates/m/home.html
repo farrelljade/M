@@ -1,4 +1,5 @@
 {% extends 'm/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -8,9 +9,22 @@
       <h2>Welcome to M</h2>
       {% for tweet in tweets %}
       <div class="alert alert-primary" role="alert">
-        ({{ tweet.created_at }})
-        <strong>{{ tweet.user }}</strong><br/>
-        {{ tweet.body }}
+        <div class="container">
+          <div class="row">
+            <div class="col-2">
+              {% if tweet.user.profile.profile_image %}
+              <img src="{{ tweet.user.profile.profile_image.url }}" class="img-fluid rounded-start" alt="{{ tweet.user.username }}">
+              {% else %}
+              <img src="{% static 'images/default_logo.png' %}" class="img-fluid rounded-start" alt="Default profile pic">
+              {% endif %}
+            </div>
+              <div class="col-10">
+                ({{ tweet.created_at }})
+                <strong>{{ tweet.user }}</strong><br/>
+                {{ tweet.body }}
+              </div>
+          </div>
+        </div>
       </div>
       {% endfor %}
     </div>
