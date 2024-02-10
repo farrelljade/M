@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django import forms
 from .models import Tweet, Profile
 
@@ -55,3 +56,11 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
         self.fields['password2'].label = ''
         self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        user_id = self.instance.id if self.instance else None
+
+        if User.objects.filter(username=username).exclude(id=user_id).exists():
+            raise ValidationError("A user with that username already exists.")
+        return username

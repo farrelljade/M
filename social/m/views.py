@@ -120,7 +120,7 @@ def update_user(request):
     """User profile update page."""
     if request.user.is_authenticated:
         current_user = User.objects.get(id=request.user.id)
-        profile_user = Profile.objects.get(user_id=request.user.id)
+        profile_user = Profile.objects.get(user__id=request.user.id)
 
         # Get forms.
         user_form = SignUpForm(request.POST or None, request.FILES or None, instance=current_user)

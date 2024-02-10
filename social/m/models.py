@@ -31,11 +31,10 @@ class Profile(models.Model):
                                      blank=True)
     
     # Info on when user last modified their data.
-    date_modified = models.DateTimeField(User, auto_now=True)
+    date_modified = models.DateTimeField(auto_now=True)
     # Image upload for User if want to
     profile_image = models.ImageField(null=True, blank=True, upload_to="images/")
     
-    # String representation of the Profile model.
     def __str__(self):
         return self.user.username
 
